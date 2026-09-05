@@ -1,0 +1,23 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Admin;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+
+class AdminSeeder extends Seeder
+{
+    public function run(): void
+    {
+        Admin::firstOrCreate(
+            ['email' => 'admin@hostelhub.test'],
+            [
+                'name' => 'HostelHub Administrator',
+                // CHANGE THIS PASSWORD before deploying to production.
+                'password' => Hash::make('ChangeMe123!'),
+                'is_active' => true,
+            ]
+        );
+    }
+}

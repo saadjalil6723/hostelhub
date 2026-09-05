@@ -1,0 +1,224 @@
+/* ==========================================================================
+   HostelHub Admin — same tokens as the public site, calmer execution.
+   Internal tool: clarity over personality. Motion is minimal (150-200ms
+   ease transitions only, no swing/stagger), typography leans on Inter for
+   density with Fraunces reserved for page titles, and color is mostly
+   delivered by overriding Bootstrap's own CSS custom properties so the
+   existing bg-success / btn-primary / border-danger classes already used
+   across the CRUD views pick up the brand palette automatically.
+   ========================================================================== */
+
+:root {
+  --ink: #15302B;
+  --ink-soft: #1E3E37;
+  --ink-muted: #4E655F;
+  --paper: #F2ECDF;
+  --chalk: #FFFCF6;
+  --brass: #C79A46;
+  --brass-dark: #A97F35;
+  --moss: #6F9C76;
+  --moss-dark: #4F7A57;
+  --rust: #B5573A;
+  --rust-dark: #93432A;
+  --line: rgba(21, 48, 43, 0.12);
+
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+
+  /* ---- Bootstrap theme overrides -----------------------------------
+     Every bg-*, border-*, and text-* Bootstrap utility already used in
+     the admin views is driven by these two variables per color, so
+     retheming here cascades through the whole panel without editing
+     every view's classes. */
+  --bs-primary: #C79A46;           --bs-primary-rgb: 199, 154, 70;
+  --bs-secondary: #4E655F;         --bs-secondary-rgb: 78, 101, 95;
+  --bs-success: #6F9C76;           --bs-success-rgb: 111, 156, 118;
+  --bs-danger: #B5573A;            --bs-danger-rgb: 181, 87, 58;
+  --bs-warning: #A97F35;           --bs-warning-rgb: 169, 127, 53;
+  --bs-info: #1E3E37;              --bs-info-rgb: 30, 62, 55;
+  --bs-light: #FFFCF6;             --bs-light-rgb: 255, 252, 246;
+  --bs-dark: #15302B;              --bs-dark-rgb: 21, 48, 43;
+
+  /* Alerts read these subtle/emphasis variants directly (Bootstrap 5.3) */
+  --bs-success-bg-subtle: #E7F0E8;
+  --bs-success-border-subtle: #C3D9C7;
+  --bs-success-text-emphasis: #3E5F44;
+  --bs-danger-bg-subtle: #F5E5E0;
+  --bs-danger-border-subtle: #E0BCAD;
+  --bs-danger-text-emphasis: #7A3A25;
+
+  --bs-body-font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --bs-body-color: #15302B;
+  --bs-body-bg: #F2ECDF;
+  --bs-border-color: rgba(21, 48, 43, 0.12);
+  --bs-link-color: #A97F35;
+  --bs-link-hover-color: #15302B;
+  --bs-focus-ring-color: rgba(199, 154, 70, 0.25);
+}
+
+body { font-family: var(--font-body); }
+h1, h2, h3, h4, h5 { font-family: var(--font-display); font-weight: 600; letter-spacing: -0.01em; }
+
+:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
+
+/* Correct text/hover colors for the two brass-backed button variants —
+   Bootstrap bakes --bs-btn-color per variant at build time, so it won't
+   auto-recompute contrast against our new background; set it explicitly. */
+.btn-primary {
+  --bs-btn-color: #15302B;
+  --bs-btn-bg: var(--brass);
+  --bs-btn-border-color: var(--brass);
+  --bs-btn-hover-color: #FFFCF6;
+  --bs-btn-hover-bg: var(--brass-dark);
+  --bs-btn-hover-border-color: var(--brass-dark);
+  --bs-btn-active-color: #FFFCF6;
+  --bs-btn-active-bg: var(--brass-dark);
+  --bs-btn-active-border-color: var(--brass-dark);
+  --bs-btn-focus-shadow-rgb: 199, 154, 70;
+  font-weight: 600;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+.btn-primary:hover { transform: translateY(-1px); }
+
+.btn-outline-primary {
+  --bs-btn-color: #15302B;
+  --bs-btn-border-color: var(--brass);
+  --bs-btn-hover-color: #15302B;
+  --bs-btn-hover-bg: rgba(199, 154, 70, 0.14);
+  --bs-btn-hover-border-color: var(--brass);
+  --bs-btn-active-color: #15302B;
+  --bs-btn-active-bg: rgba(199, 154, 70, 0.2);
+  --bs-btn-active-border-color: var(--brass);
+}
+
+.btn-outline-danger {
+  --bs-btn-color: var(--rust-dark);
+  --bs-btn-border-color: var(--rust);
+  --bs-btn-hover-color: #FFFCF6;
+  --bs-btn-hover-bg: var(--rust);
+  --bs-btn-hover-border-color: var(--rust);
+}
+
+.btn-outline-warning {
+  --bs-btn-color: var(--brass-dark);
+  --bs-btn-border-color: var(--brass);
+  --bs-btn-hover-color: #15302B;
+  --bs-btn-hover-bg: rgba(199, 154, 70, 0.18);
+  --bs-btn-hover-border-color: var(--brass);
+}
+
+.btn-outline-secondary {
+  --bs-btn-color: var(--ink-muted);
+  --bs-btn-border-color: rgba(78, 101, 95, 0.45);
+  --bs-btn-hover-color: #FFFCF6;
+  --bs-btn-hover-bg: var(--ink-muted);
+  --bs-btn-hover-border-color: var(--ink-muted);
+}
+
+.badge { font-family: var(--font-mono); font-weight: 600; letter-spacing: 0.02em; font-size: 0.72em; }
+
+/* ==========================================================================
+   Shell layout — sidebar, topbar
+   ========================================================================== */
+
+.hh-admin-sidebar {
+  min-height: 100vh;
+  width: 240px;
+  background: var(--ink);
+  padding: 1.5rem 1rem;
+  flex-shrink: 0;
+}
+
+.hh-admin-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--chalk) !important;
+  text-decoration: none;
+  margin-bottom: 1.75rem;
+}
+.hh-admin-brand svg { width: 22px; height: 22px; flex-shrink: 0; }
+
+.hh-admin-sidebar nav a {
+  color: rgba(242, 236, 223, 0.7);
+  padding: 0.55rem 0.8rem;
+  display: block;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  margin-bottom: 0.1rem;
+}
+.hh-admin-sidebar nav a:hover {
+  background: rgba(242, 236, 223, 0.08);
+  color: var(--chalk);
+}
+.hh-admin-sidebar nav a.active {
+  background: var(--brass);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.hh-admin-sidebar .btn-outline-light {
+  --bs-btn-color: rgba(242, 236, 223, 0.85);
+  --bs-btn-border-color: rgba(242, 236, 223, 0.3);
+  --bs-btn-hover-color: var(--ink);
+  --bs-btn-hover-bg: var(--chalk);
+  --bs-btn-hover-border-color: var(--chalk);
+}
+
+.hh-admin-topbar {
+  background: var(--chalk);
+  border-bottom: 1px solid var(--line);
+  padding: 0.9rem 1.5rem;
+  font-size: 0.9rem;
+  color: var(--ink-muted);
+}
+
+/* ==========================================================================
+   Cards, tables, forms
+   ========================================================================== */
+
+.stat-card {
+  border: 1px solid var(--line) !important;
+  border-radius: 12px;
+  background: var(--chalk);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(21, 48, 43, 0.08); }
+.stat-card h3 { font-family: var(--font-mono); font-weight: 600; font-size: 1.6rem; }
+
+.card {
+  border-color: var(--line);
+  border-radius: 12px;
+}
+
+.table {
+  --bs-table-hover-bg: rgba(199, 154, 70, 0.06);
+}
+.table thead th {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  border-bottom-width: 1px;
+  font-weight: 600;
+  background: rgba(21, 48, 43, 0.03);
+}
+
+.form-control, .form-select {
+  border-color: var(--line);
+  border-radius: 8px;
+}
+.form-control:focus, .form-select:focus {
+  border-color: var(--brass);
+  box-shadow: 0 0 0 0.2rem rgba(199, 154, 70, 0.15);
+}
+label.form-label { font-weight: 600; font-size: 0.88rem; }
+
+.alert { border-radius: 10px; }

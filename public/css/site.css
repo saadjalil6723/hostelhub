@@ -1,0 +1,470 @@
+/* ==========================================================================
+   HostelHub Design System
+   Concept: "The Key Wall" — a hostel hands out room keys, so the recurring
+   visual signature is the key tag: a small hand-labelled chip with a
+   die-cut hole, engraved room number, and a status dot. It appears in the
+   hero, on room cards, and as a structural motif throughout.
+   ========================================================================== */
+
+:root {
+  /* Color tokens */
+  --ink: #15302B;
+  --ink-soft: #1E3E37;
+  --ink-muted: #4E655F;
+  --paper: #F2ECDF;
+  --chalk: #FFFCF6;
+  --brass: #C79A46;
+  --brass-dark: #A97F35;
+  --moss: #6F9C76;
+  --moss-dark: #4F7A57;
+  --rust: #B5573A;
+  --rust-dark: #93432A;
+  --line: rgba(21, 48, 43, 0.12);
+  --shadow-color: 21, 48, 43;
+
+  /* Type */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+
+  /* Rhythm */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --section-pad: clamp(3.5rem, 6vw, 6.5rem);
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+html { scroll-behavior: smooth; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, .display-serif {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+a { color: var(--brass-dark); text-decoration: none; }
+a:hover { color: var(--ink); }
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brass-dark);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+}
+.eyebrow::before {
+  content: '';
+  width: 18px;
+  height: 1px;
+  background: var(--brass-dark);
+  display: inline-block;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+
+.btn-brass, .btn-outline-ink, .btn-outline-paper {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.7rem 1.6rem;
+  border-radius: 999px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+  border: 1.5px solid transparent;
+}
+
+.btn-brass {
+  background: var(--brass);
+  color: var(--ink);
+  box-shadow: 0 6px 18px rgba(199, 154, 70, 0.35);
+}
+.btn-brass:hover {
+  background: var(--brass-dark);
+  color: var(--chalk);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(199, 154, 70, 0.45);
+}
+
+.btn-outline-ink {
+  background: transparent;
+  border-color: var(--ink);
+  color: var(--ink);
+}
+.btn-outline-ink:hover {
+  background: var(--ink);
+  color: var(--chalk);
+  transform: translateY(-2px);
+}
+
+.btn-outline-paper {
+  background: transparent;
+  border-color: rgba(255, 252, 246, 0.5);
+  color: var(--chalk);
+}
+.btn-outline-paper:hover {
+  background: var(--chalk);
+  color: var(--ink);
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   Navbar
+   ========================================================================== */
+
+.hh-navbar {
+  background: rgba(21, 48, 43, 0.92);
+  backdrop-filter: blur(10px);
+  padding: 0.9rem 0;
+  transition: padding 0.3s ease, box-shadow 0.3s ease;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+.hh-navbar.is-scrolled {
+  padding: 0.55rem 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.hh-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.35rem;
+  color: var(--chalk) !important;
+}
+.hh-brand svg { width: 26px; height: 26px; flex-shrink: 0; }
+
+.hh-navbar .nav-link {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(242, 236, 223, 0.75) !important;
+  padding: 0.5rem 1rem !important;
+  position: relative;
+}
+.hh-navbar .nav-link::after {
+  content: '';
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: 0.15rem;
+  height: 2px;
+  background: var(--brass);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+.hh-navbar .nav-link:hover,
+.hh-navbar .nav-link.active {
+  color: var(--chalk) !important;
+}
+.hh-navbar .nav-link:hover::after,
+.hh-navbar .nav-link.active::after {
+  transform: scaleX(1);
+}
+
+.hh-navbar .navbar-toggler {
+  border-color: rgba(242, 236, 223, 0.3);
+  padding: 0.4rem 0.6rem;
+}
+.hh-navbar .navbar-toggler-icon {
+  filter: invert(1) grayscale(1) brightness(2);
+}
+
+/* ==========================================================================
+   Hero — "The Key Wall"
+   ========================================================================== */
+
+.hh-hero {
+  background: radial-gradient(120% 140% at 15% 0%, #1E3E37 0%, #15302B 55%, #0F221E 100%);
+  color: var(--chalk);
+  padding: clamp(3rem, 8vw, 6rem) 0 clamp(4rem, 10vw, 8rem);
+  overflow: hidden;
+  position: relative;
+}
+
+.hh-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+
+@media (max-width: 991.98px) {
+  .hh-hero-grid { grid-template-columns: 1fr; }
+}
+
+.hh-hero h1 {
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  line-height: 1.06;
+  color: var(--chalk);
+  margin: 0.6rem 0 1rem;
+}
+.hh-hero .lead-copy {
+  font-size: 1.1rem;
+  color: rgba(242, 236, 223, 0.82);
+  max-width: 42ch;
+  margin-bottom: 1.75rem;
+}
+.hh-hero .eyebrow { color: var(--brass); }
+.hh-hero .eyebrow::before { background: var(--brass); }
+
+.hh-hero-actions { display: flex; flex-wrap: wrap; gap: 0.9rem; }
+
+/* The key wall itself */
+.keywall {
+  position: relative;
+  min-height: 320px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.1rem 0.9rem;
+  padding: 0.5rem;
+}
+@media (max-width: 991.98px) {
+  .keywall {
+    grid-template-columns: repeat(5, minmax(64px, 1fr));
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(64px, 1fr);
+    overflow-x: auto;
+    padding-bottom: 1rem;
+    min-height: 0;
+  }
+}
+
+.key-tag {
+  --tilt: 0deg;
+  background: var(--chalk);
+  border-radius: 12px 12px 7px 7px;
+  padding: 1.6rem 0.5rem 0.75rem;
+  text-align: center;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28);
+  position: relative;
+  transform: rotate(var(--tilt));
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+  opacity: 0;
+  animation: keySwingIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--delay, 0s);
+}
+.key-tag::before {
+  content: '';
+  position: absolute;
+  top: 0.55rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow: inset 0 0 0 2.5px var(--chalk);
+}
+.key-tag:hover {
+  transform: rotate(0deg) translateY(-6px);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.35);
+}
+.key-tag .room-no {
+  display: block;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--ink);
+}
+.key-tag .room-type-mini {
+  display: block;
+  font-size: 0.62rem;
+  color: var(--ink-muted);
+  margin-top: 0.15rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.key-tag .status-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  margin-top: 0.4rem;
+}
+.status-dot.available { background: var(--moss); }
+.status-dot.partially_occupied { background: var(--brass); }
+.status-dot.full { background: var(--rust); }
+.status-dot.maintenance { background: var(--ink-muted); }
+
+@keyframes keySwingIn {
+  0% { opacity: 0; transform: rotate(0deg) translateY(-18px) scale(0.9); }
+  60% { opacity: 1; }
+  100% { opacity: 1; transform: rotate(var(--tilt)) translateY(0) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .key-tag { animation: none; opacity: 1; }
+}
+
+/* ==========================================================================
+   Sections & scroll reveal
+   ========================================================================== */
+
+.hh-section { padding: var(--section-pad) 0; }
+.hh-section-alt { background: var(--chalk); }
+
+.section-heading { margin-bottom: 2.75rem; }
+.section-heading h2 { font-size: clamp(1.8rem, 3.2vw, 2.5rem); margin: 0.5rem 0 0.75rem; }
+.section-heading p { color: var(--ink-muted); max-width: 56ch; }
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.is-visible { opacity: 1; transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* ==========================================================================
+   Cards
+   ========================================================================== */
+
+.hh-card {
+  background: var(--chalk);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+}
+.hh-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 36px rgba(var(--shadow-color), 0.14);
+}
+.hh-card .card-body { padding: 1.5rem; }
+.hh-card .card-img-top { height: 190px; object-fit: cover; }
+
+.hh-room-card { border-top: 4px solid var(--ink-muted); }
+.hh-room-card.status-available { border-top-color: var(--moss); }
+.hh-room-card.status-partially_occupied { border-top-color: var(--brass); }
+.hh-room-card.status-full { border-top-color: var(--rust); }
+.hh-room-card.status-maintenance { border-top-color: var(--ink-muted); }
+
+.hh-room-card .room-price {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.hh-badge {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  display: inline-block;
+}
+.hh-badge.status-available { background: rgba(111, 156, 118, 0.15); color: var(--moss-dark); }
+.hh-badge.status-partially_occupied { background: rgba(199, 154, 70, 0.18); color: var(--brass-dark); }
+.hh-badge.status-full { background: rgba(181, 87, 58, 0.15); color: var(--rust-dark); }
+.hh-badge.status-maintenance { background: rgba(78, 101, 95, 0.15); color: var(--ink-muted); }
+
+/* ==========================================================================
+   Gallery
+   ========================================================================== */
+
+.hh-gallery-item {
+  position: relative;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+}
+.hh-gallery-item img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.hh-gallery-item:hover img { transform: scale(1.08); }
+.hh-gallery-caption {
+  position: absolute; inset: auto 0 0 0;
+  background: linear-gradient(to top, rgba(21,48,43,0.85), transparent);
+  color: var(--chalk);
+  padding: 1.75rem 0.9rem 0.7rem;
+  font-size: 0.8rem;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.hh-gallery-item:hover .hh-gallery-caption { opacity: 1; transform: translateY(0); }
+
+/* ==========================================================================
+   Forms
+   ========================================================================== */
+
+.hh-form .form-control, .hh-form .form-select {
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 0.7rem 0.9rem;
+  background: var(--chalk);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.hh-form .form-control:focus, .hh-form .form-select:focus {
+  border-color: var(--brass);
+  box-shadow: 0 0 0 4px rgba(199, 154, 70, 0.15);
+}
+.hh-form label { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.35rem; }
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+.hh-footer { background: var(--ink); color: rgba(242, 236, 223, 0.75); }
+.hh-footer h5, .hh-footer h6 { color: var(--chalk); }
+.hh-footer a { color: rgba(242, 236, 223, 0.75); }
+.hh-footer a:hover { color: var(--brass); }
+.hh-footer hr { border-color: rgba(242, 236, 223, 0.15); }
+
+/* ==========================================================================
+   Misc utilities
+   ========================================================================== */
+
+.text-brass { color: var(--brass-dark) !important; }
+.bg-paper { background: var(--paper) !important; }
+.bg-chalk { background: var(--chalk) !important; }
+
+.alert-hh-success {
+  background: rgba(111, 156, 118, 0.12);
+  border: 1px solid rgba(111, 156, 118, 0.35);
+  color: var(--moss-dark);
+  border-radius: var(--radius-sm);
+}
